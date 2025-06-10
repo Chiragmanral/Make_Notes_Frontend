@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Make Notes</title>
+  </head>
+  <body>
+    <header>
+      <nav class="notes-choice">
+        <button type="button" class="choice" (click)="getGenerateNotes()">Generate Notes</button>
+        <button type="button" class="choice" (click)="getViewNotes()" >View Notes</button>
+      </nav>
+    </header>
+
+    <div *ngIf="generateNotes" class="form">
+      <form>
+        <label for="input-text">Text : </label>
+        <input
+          name="input-text"
+          type="text"
+          placeholder="Enter some text here"
+          required
+        />
+        <br /><br />
+        <label for="password">Password : </label>
+        <input name="password" type="password" />
+        <br /><br />
+
+        <div class="button-select-flex">
+            <button type="submit" class="form-button">Generate Link</button>
+    
+            <select name="validationDuration" id="validationDuration">
+                <option value="once">Once</option>
+                <option value="1hr">1 hr</option>
+                <option value="1day">1 day</option>
+                <option value="1week">1 week</option>
+                <option value="1month">1 month</option>
+                <option value="always">Always</option>
+            </select>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="viewNotes" class="form">
+      <form>
+        <label for="link">Link : </label>
+        <input
+          name="link"
+          type="text"
+          placeholder="Enter your link here"
+          required
+        />
+        <br /><br />
+        <label for="password">Password : </label>
+        <input name="password" type="password" />
+        <br /><br />
+        <button type="submit" class="form-button">Submit</button>
+    </form>
+</div>
+</body>
+</html>

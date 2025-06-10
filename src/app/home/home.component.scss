@@ -1,0 +1,57 @@
+.notes-choice {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.choice {
+    width: 50vw;
+    height: 45px;
+    margin: 5px;
+    background-color: #221f1fda;
+    border: none;
+    color: #ffffff;
+}
+
+.choice:hover {
+    background-color: #212121;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px;
+    border: 2px solid #212121;
+    height: 35vh;
+    width: 40vw;
+    border-radius: 10px;
+}
+
+
+input {
+    font-size: 30px;
+    margin: 10px;
+}
+
+label {
+    font-size: 30px;
+    margin: 10px;
+}
+
+.form-button {
+    height: 4vh;
+    width: 8vw;
+    margin : 10px;
+}
+
+.button-select-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+select {
+    height: 4vh;
+    width: 4vw;
+}
