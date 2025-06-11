@@ -17,6 +17,7 @@
       <form>
         <label for="input-text">Text : </label>
         <input
+          [(ngModel)] = "enteredText"
           name="input-text"
           type="text"
           placeholder="Enter some text here"
@@ -24,13 +25,13 @@
         />
         <br /><br />
         <label for="password">Password : </label>
-        <input name="password" type="password" />
+        <input name="password" type="password" [(ngModel)] = "enteredPassword"/>
         <br /><br />
 
         <div class="button-select-flex">
-            <button type="submit" class="form-button">Generate Link</button>
+            <button type="submit" class="form-button" (click)="generateLink()">Generate Link</button>
     
-            <select name="validationDuration" id="validationDuration">
+            <select name="validationDuration" id="validationDuration" [(ngModel)] = "enteredDuration">
                 <option value="once">Once</option>
                 <option value="1hr">1 hr</option>
                 <option value="1day">1 day</option>
@@ -39,13 +40,20 @@
                 <option value="always">Always</option>
             </select>
         </div>
+
+        <div *ngIf="noteLink">
+          <p>Note Link: <a [href]="noteLink" target="_blank">{{ noteLink }}</a></p>
+        </div>  
+
       </form>
     </div>
+
 
     <div *ngIf="viewNotes" class="form">
       <form>
         <label for="link">Link : </label>
         <input
+          [(ngModel)] = "noteLinkCredential"
           name="link"
           type="text"
           placeholder="Enter your link here"
@@ -53,7 +61,7 @@
         />
         <br /><br />
         <label for="password">Password : </label>
-        <input name="password" type="password" />
+        <input name="password" type="password" [(ngModel)] = "passwordCredential"/>
         <br /><br />
         <button type="submit" class="form-button">Submit</button>
     </form>
