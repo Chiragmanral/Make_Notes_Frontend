@@ -14,7 +14,7 @@
     </header>
 
     <div *ngIf="generateNotes" class="form">
-      <form>
+      <form (ngSubmit)="generateLink()">
         <label for="input-text">Text : </label>
         <input
           [(ngModel)] = "enteredText"
@@ -29,20 +29,21 @@
         <br /><br />
 
         <div class="button-select-flex">
-            <button type="submit" class="form-button" (click)="generateLink()">Generate Link</button>
+            <button type="submit" class="form-button">Generate Link</button>
     
             <select name="validationDuration" id="validationDuration" [(ngModel)] = "enteredDuration">
                 <option value="once">Once</option>
                 <option value="1hr">1 hr</option>
+                <option value="8hr">8 hr</option>
                 <option value="1day">1 day</option>
                 <option value="1week">1 week</option>
-                <option value="1month">1 month</option>
                 <option value="always">Always</option>
             </select>
         </div>
 
         <div *ngIf="noteLink">
-          <p>Note Link: <a [href]="noteLink" target="_blank">{{ noteLink }}</a></p>
+          <h4>Note Link: <a [href]="noteLink" target="_blank">{{ noteLink }}</a></h4>
+          <button type="button" class="form-button" (click)="copyLink()">Copy link</button>
         </div>  
 
       </form>
@@ -63,7 +64,18 @@
         <label for="password">Password : </label>
         <input name="password" type="password" [(ngModel)] = "passwordCredential"/>
         <br /><br />
-        <button type="submit" class="form-button">Submit</button>
+        <button type="submit" class="form-button" (click)="getNote()">Submit</button>
+
+        <div *ngIf="noteText">
+          <h4>Your note is :- {{ noteText }}</h4>
+        </div>
+
+        <!-- <div *ngIf="noteMsg">
+          <h4>Error :- {{ noteMsg }}</h4>
+        </div> -->
+        <div *ngIf="noteMsg && !noteText" class="error">
+          <h4>{{ noteMsg }}</h4>
+        </div>
     </form>
 </div>
 </body>

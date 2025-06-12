@@ -20,6 +20,8 @@ export class HomeComponent {
   enteredDuration : string = "once";
   noteLinkCredential : string = "";
   passwordCredential : string = "";
+  noteText : string = "";
+  noteMsg : string = "";
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -51,9 +53,27 @@ export class HomeComponent {
   }
 
   getNote() {
-    this.http.post<{text : string}>("http://localhost:5000/getNote", {
+    this.http.post<{text : string, msg : string}>("http://localhost:5000/getNote", {
       noteLinkCredential : this.noteLinkCredential,
       passwordCredential : this.passwordCredential
     })
+    .subscribe({
+        next: ({ text, msg }) => {
+          this.noteText = text;
+          this.noteMsg = msg;
+          this.noteLinkCredential = "";
+          this.passwordCredential = "";
+        },
+        error: () => alert('Server error – check backend console.'),
+      });
   }
+
+  copyLink() {
+    navigator.clipboard.writeText(this.noteLink).then(() => {
+      console.log("Your link is copied to the clipboard!!");
+    }).catch(() => {
+      alert("Failed to copy link");
+    });
+  }
+
 }
