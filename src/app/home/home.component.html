@@ -15,7 +15,7 @@
 
     <div *ngIf="generateNotes" class="form">
       <form (ngSubmit)="generateLink()">
-        <label for="input-text">Text : </label>
+        <label for="input-text">Text* : </label>
         <input
           [(ngModel)] = "enteredText"
           name="input-text"
@@ -26,6 +26,7 @@
         <br /><br />
         <label for="password">Password : </label>
         <input name="password" type="password" [(ngModel)] = "enteredPassword"/>
+        <!-- <p class="password-msg">Give password to make your note password protected else leave it to make it a public note.</p> -->
         <br /><br />
 
         <div class="button-select-flex">
@@ -42,7 +43,7 @@
         </div>
 
         <div *ngIf="noteLink">
-          <h4>Note Link: <a [href]="noteLink" target="_blank">{{ noteLink }}</a></h4>
+          <h4>Note Link: <a target="_blank">{{ noteLink }}</a></h4>
           <button type="button" class="form-button" (click)="copyLink()">Copy link</button>
         </div>  
 
@@ -52,7 +53,7 @@
 
     <div *ngIf="viewNotes" class="form">
       <form>
-        <label for="link">Link : </label>
+        <label for="link">Link* : </label>
         <input
           [(ngModel)] = "noteLinkCredential"
           name="link"
@@ -63,6 +64,7 @@
         <br /><br />
         <label for="password">Password : </label>
         <input name="password" type="password" [(ngModel)] = "passwordCredential"/>
+        <!-- <p class="password-msg">Enter password if the note is password protected, for public notes leave it.</p> -->
         <br /><br />
         <button type="submit" class="form-button" (click)="getNote()">Submit</button>
 

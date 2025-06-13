@@ -36,6 +36,8 @@ export class HomeComponent {
   }
 
   generateLink() {
+    if(!this.enteredText) return;
+
     this.http.post<{ generatedLink : string}>("https://make-notes-backend.onrender.com/generateLink", {
       noteText : this.enteredText,
       notePassword : this.enteredPassword,
@@ -53,6 +55,8 @@ export class HomeComponent {
   }
 
   getNote() {
+    if(!this.noteLinkCredential) return;
+    
     this.http.post<{text : string, msg : string}>("https://make-notes-backend.onrender.com/getNote", {
       noteLinkCredential : this.noteLinkCredential,
       passwordCredential : this.passwordCredential
