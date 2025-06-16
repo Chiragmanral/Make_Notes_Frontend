@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup</title>
+</head>
+<body>
+  <header>
+    <h2>Sign Up</h2>
+  </header>
+
+  <div class="form">
+    <form (ngSubmit)="signup()">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Enter your email"
+        [(ngModel)]="email"
+        required
+      />
+
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter your password"
+        [(ngModel)]="password"
+        required
+      />
+
+      <button type="submit" class="form-button">Create Account</button>
+      <p style="margin-top: 1rem;">Already have an account?
+        <a routerLink="/login" (click)="login()">Login here</a>
+      </p>
+    </form>
+  </div>
+</body>
+</html>
