@@ -16,11 +16,13 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   email = '';
   password = '';
+  isInvalidCredentials : boolean = false;
 
   constructor(private http: HttpClient, private router: Router, private auth: AuthService) {}
 
   login() {
-    this.http.post<{ success: boolean }>('https://your-backend.com/login', {
+    if(!this.email || !this.password) return;
+    this.http.post<{ success: boolean }>('http://localhost:5000/login', {
       email: this.email,
       password: this.password
     }).subscribe({
@@ -29,7 +31,7 @@ export class LoginComponent {
           this.auth.login();
           this.router.navigate(['/notes']);
         } else {
-          alert('Invalid credentials!');
+          this.isInvalidCredentials = true;
         }
       },
       error: () => alert('Server error – check backend console.')

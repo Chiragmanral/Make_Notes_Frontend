@@ -13,20 +13,28 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './signup.component.scss',
 })
 export class SignupComponent {
-  email = '';
-  password = '';
+  email : string = '';
+  password : string = '';
+  isSignupSuccessful : boolean = false;
 
   constructor(private http: HttpClient, private router: Router) {}
 
   signup() {
-    this.http.post<{ success: boolean }>('https://your-backend.com/signup', {
+    if(!this.email || !this.password) return;
+    this.http.post<{ success: boolean }>('http://localhost:5000/signup', {
       email: this.email,
       password: this.password
     }).subscribe({
       next: (res) => {
         if (res.success) {
-          alert('Signup successful!');
+          alert("Signup successfull!!");
           this.router.navigate(['/login']);
+          
+          // this.isSignupSuccessful = true;
+          // setTimeout(() => {
+          //   this.router.navigate(['/login']);
+          // }, 2000);
+          
         } else {
           alert('Signup failed!');
         }

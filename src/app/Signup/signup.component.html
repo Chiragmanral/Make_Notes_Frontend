@@ -32,6 +32,9 @@
         required
       />
 
+      <div *ngIf="isSignupSuccessful" class="success">
+        SignUp Successful
+      </div>
       <button type="submit" class="form-button">Create Account</button>
       <p style="margin-top: 1rem;">Already have an account?
         <a routerLink="/login" (click)="login()">Login here</a>

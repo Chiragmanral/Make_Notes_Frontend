@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +24,7 @@ export class HomeComponent {
   noteText : string = "";
   noteMsg : string = "";
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private auth : AuthService) {}
 
   getGenerateNotes() {
     this.generateNotes = true;
@@ -78,6 +79,11 @@ export class HomeComponent {
     }).catch(() => {
       alert("Failed to copy link");
     });
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 
 }
