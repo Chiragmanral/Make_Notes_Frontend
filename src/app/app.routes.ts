@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { provideRouter } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './Login/login.component';
 import { SignupComponent } from './Signup/signup.component';
