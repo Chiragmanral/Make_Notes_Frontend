@@ -21,7 +21,7 @@ export class SignupComponent {
 
   signup() {
     if(!this.email || !this.password) return;
-    this.http.post<{ success: boolean }>('https://make-notes-backend.onrender.com/signup', {
+    this.http.post<{ success: boolean }>('http://localhost:5000/signup', {
       email: this.email,
       password: this.password
     }).subscribe({

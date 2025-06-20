@@ -22,12 +22,13 @@ export class LoginComponent {
 
   login() {
     if(!this.email || !this.password) return;
-    this.http.post<{ success: boolean }>('https://make-notes-backend.onrender.com/login', {
+    this.http.post<{ success: boolean, token ?: string }>('http://localhost:5000/login', {
       email: this.email,
       password: this.password
     }).subscribe({
       next: (res) => {
-        if (res.success) {
+        if (res.success && res.token) {
+          localStorage.setItem("token", res.token);
           this.auth.login();
           this.router.navigate(['/notes']);
         } else {

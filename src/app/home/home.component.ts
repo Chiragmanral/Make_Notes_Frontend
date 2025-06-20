@@ -23,6 +23,7 @@ export class HomeComponent {
   passwordCredential : string = "";
   noteText : string = "";
   noteMsg : string = "";
+  userNotes : any[] = [];
 
   constructor(private http: HttpClient, private router: Router, private auth : AuthService) {}
 
@@ -39,10 +40,14 @@ export class HomeComponent {
   generateLink() {
     if(!this.enteredText) return;
 
-    this.http.post<{ generatedLink : string}>("https://make-notes-backend.onrender.com/generateLink", {
+    this.http.post<{ generatedLink : string}>("http://localhost:5000/generateLink", {
       noteText : this.enteredText,
       notePassword : this.enteredPassword,
       noteDuration : this.enteredDuration
+    }, {
+      headers : {
+        Authorization : `Bearer ${localStorage.getItem("token")}`
+      }
     })
     .subscribe({
         next: ({ generatedLink }) => {
@@ -58,9 +63,13 @@ export class HomeComponent {
   getNote() {
     if(!this.noteLinkCredential) return;
     
-    this.http.post<{text : string, msg : string}>("https://make-notes-backend.onrender.com/getNote", {
+    this.http.post<{text : string, msg : string}>("http://localhost:5000/getNote", {
       noteLinkCredential : this.noteLinkCredential,
       passwordCredential : this.passwordCredential
+    }, {
+      headers : {
+        Authorization : `Bearer ${localStorage.getItem("token")}`
+      }
     })
     .subscribe({
         next: ({ text, msg }) => {
@@ -84,6 +93,27 @@ export class HomeComponent {
   logout() {
     this.auth.logout();
     this.router.navigate(['/login']);
+  }
+
+  ngOnInit() {
+    this.fetchUserNotes();
+  }
+
+  fetchUserNotes() {
+    const token = localStorage.getItem('token');
+    if(!token) return;
+
+    this.http.get<{ notes : any[] }>(
+      "http://localhost:5000/myNotes", 
+      {
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      }
+    ).subscribe({
+      next : (res) => this.userNotes = res.notes,
+      error : () => console.error("failed to fetch user notes")
+    });
   }
 
 }
