@@ -6,15 +6,19 @@ import { Injectable } from "@angular/core";
 
 export class AuthService {
 
-  login() {
-    localStorage.setItem('loggedIn', 'true');
+  login(token : string) {
+    localStorage.setItem('token', token);
   }
 
   logout() {
-    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('token');
   }
 
   checkLogin(): boolean {
-    return localStorage.getItem('loggedIn') === 'true';
+    return !!localStorage.getItem('token');
+  }
+
+  getToken() : string | null {
+    return localStorage.getItem('token');
   }
 }

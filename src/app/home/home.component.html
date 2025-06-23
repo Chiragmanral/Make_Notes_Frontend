@@ -49,18 +49,22 @@
         </div>  
 
       </form>
+
+      <div *ngIf="userNotes.length > 0">
+        <h3>Your Notes : </h3>
+        <ul>
+          <li *ngFor="let note of userNotes">
+            🔗 <a [href]="note.noteUrl" target="_blank">{{ note.noteUrl }}</a>
+            <button type="button" class="form-button mynotes" (click)="copyLink()">Copy link</button>
+          <span *ngIf="note.noteViewOnce"> - View Once</span>
+          <span *ngIf="note.noteViewAlways"> - Always Visible</span>
+          <span *ngIf="note.noteValidationTime"> - Expires at: {{ note.noteValidationTime | date }}</span>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
-    <div *ngIf="userNotes.length > 0">
-      <h3>Your Notes : </h3>
-      <ul>
-        <li *ngFor="let note of userNotes">
-          🔗 <a [href]="note.noteUrl" target="_blank">{{ note.noteUrl }}</a>
-        <span *ngIf="note.noteViewOnce"> - View Once</span>
-        <span *ngIf="note.noteViewAlways"> - Always Visible</span>
-        </li>
-      </ul>
-    </div>
 
 
     <div *ngIf="viewNotes" class="form">

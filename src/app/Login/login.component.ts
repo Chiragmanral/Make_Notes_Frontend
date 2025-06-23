@@ -29,7 +29,7 @@ export class LoginComponent {
       next: (res) => {
         if (res.success && res.token) {
           localStorage.setItem("token", res.token);
-          this.auth.login();
+          this.auth.login(res.token);
           this.router.navigate(['/notes']);
         } else {
           this.isInvalidCredentials = true;
