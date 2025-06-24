@@ -28,13 +28,7 @@ export class SignupComponent {
       next: (res) => {
         if (res.success) {
           alert("Signup successfull!!");
-          this.router.navigate(['/login']);
-          
-          // this.isSignupSuccessful = true;
-          // setTimeout(() => {
-          //   this.router.navigate(['/login']);
-          // }, 2000);
-          
+          this.router.navigate(['/login']);         
         } else {
           alert('Signup failed!');
         }

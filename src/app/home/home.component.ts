@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,7 @@ import { AuthService } from '../../auth.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   generateNotes : boolean = true;
   viewNotes : boolean = false;
   noteLink : string = "";
@@ -25,7 +26,13 @@ export class HomeComponent {
   noteMsg : string = "";
   userNotes : any[] = [];
 
-  constructor(private http: HttpClient, private router: Router, private auth : AuthService) {}
+  constructor(private http: HttpClient, private router: Router, private auth : AuthService) {
+    this.router.events.subscribe(() => {
+      if (!this.auth.checkLogin()) {
+        this.auth.logout(); // auto logout on token tamper/expiry
+      }
+    });
+  }
 
   getGenerateNotes() {
     this.generateNotes = true;
@@ -97,6 +104,30 @@ export class HomeComponent {
 
   ngOnInit() {
     this.fetchUserNotes();
+    const token = this.auth.getToken();
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      const expiryTime = decoded.exp * 1000;
+      const timeout = expiryTime - Date.now();
+  
+      if (timeout > 0) {
+        this.auth.autoLogout(timeout);
+      } else {
+        this.auth.logout();
+      }
+    }
+
+    setInterval(() => {
+      if (!this.auth.checkLogin()) {
+        this.auth.logout();
+      }
+    }, 8000);
+
+    window.addEventListener('storage', () => {
+      if (!this.auth.checkLogin()) {
+        this.auth.logout();
+      }
+    });
   }
 
   fetchUserNotes() {
@@ -104,7 +135,7 @@ export class HomeComponent {
     if(!token) return;
 
     this.http.get<{ notes : any[] }>(
-      "http://localhost:5000/myNotes", 
+      "http://localhost:5000/myNotes",
       {
         headers : {
           Authorization : `Bearer ${token}`
