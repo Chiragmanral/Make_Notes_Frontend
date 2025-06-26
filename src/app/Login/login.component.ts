@@ -1,4 +1,3 @@
-// login.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -16,19 +15,18 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   email = '';
   password = '';
-  isInvalidCredentials : boolean = false;
+  isInvalidCredentials: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router, private auth: AuthService) {}
+  constructor(private http: HttpClient, private router: Router, private auth: AuthService) { }
 
   login() {
-    if(!this.email || !this.password) return;
-    this.http.post<{ success: boolean, token ?: string }>('http://localhost:5000/login', {
+    if (!this.email || !this.password) return;
+    this.http.post<{ success: boolean, token?: string }>('https://make-notes-backend.onrender.com/login', {
       email: this.email,
       password: this.password
     }).subscribe({
       next: (res) => {
         if (res.success && res.token) {
-          localStorage.setItem("token", res.token);
           this.auth.login(res.token);
           this.router.navigate(['/notes']);
         } else {
