@@ -14,8 +14,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     window.addEventListener('storage', async () => {
-      const isLoggedIn = await firstValueFrom(this.auth.checkLogin());
-      if (!isLoggedIn) {
+      const isTokensValid = await firstValueFrom(this.auth.checkTokens());
+      if (!isTokensValid) {
         this.auth.logout();
       }
     });

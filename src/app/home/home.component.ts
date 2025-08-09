@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
@@ -44,14 +44,10 @@ export class HomeComponent implements OnInit {
   generateLink() {
     if (!this.enteredText) return;
 
-    this.http.post<{ generatedLink: string }>("https://make-notes-backend.onrender.com/generateLink", {
+    this.http.post<{ generatedLink: string }>("http://localhost:5000/generateLink", {
       noteText: this.enteredText,
       notePassword: this.enteredPassword,
       noteDuration: this.enteredDuration
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
     })
       .subscribe({
         next: ({ generatedLink }) => {
@@ -60,20 +56,23 @@ export class HomeComponent implements OnInit {
           this.enteredPassword = "";
           this.enteredDuration = "once";
         },
-        error: () => alert('Server error – check backend console.'),
+        error: (err : HttpErrorResponse) => {
+          if(err.status === 403) {
+            alert("Your token or session is expired!! Login again")
+          }
+          else {
+            alert('Server error – check backend console.')
+          }
+        }
       });
   }
 
   getNote() {
     if (!this.noteLinkCredential) return;
 
-    this.http.post<{ text: string, msg: string }>("https://make-notes-backend.onrender.com/getNote", {
+    this.http.post<{ text: string, msg: string }>("http://localhost:5000/getNote", {
       noteLinkCredential: this.noteLinkCredential,
       passwordCredential: this.passwordCredential
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
     })
       .subscribe({
         next: ({ text, msg }) => {
@@ -82,11 +81,18 @@ export class HomeComponent implements OnInit {
           this.noteLinkCredential = "";
           this.passwordCredential = "";
         },
-        error: () => alert('Server error – check backend console.'),
+        error: (err : HttpErrorResponse) => {
+          if(err.status === 403) {
+            alert("Your token or session is expired!! Login again")
+          }
+          else {
+            alert('Server error – check backend console.')
+          }
+        }
       });
   }
 
-  copyLink(noteUrl : string) {
+  copyLink(noteUrl: string) {
     navigator.clipboard.writeText(noteUrl).then(() => {
       console.log("Your link is copied to the clipboard!!");
     }).catch(() => {
@@ -99,16 +105,11 @@ export class HomeComponent implements OnInit {
   }
 
   fetchUserNotes() {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) return;
 
     this.http.get<{ notes: any[] }>(
-      "https://make-notes-backend.onrender.com/myNotes",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      "http://localhost:5000/myNotes",
     ).subscribe({
       next: (res) => this.userNotes = res.notes,
       error: () => console.error("failed to fetch user notes")

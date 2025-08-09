@@ -1,56 +1,46 @@
-import { Injectable } from "@angular/core";
-import { jwtDecode } from 'jwt-decode';
-import { Router } from "@angular/router";
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, map, catchError } from "rxjs";
+import { catchError, map, Observable, of, tap } from 'rxjs';
 
-@Injectable({
-  providedIn: "root"
-})
-
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private logoutTimer: any;
+  private API_URL = 'http://localhost:5000';
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  login(token: string) {
-    localStorage.setItem('token', token);
-
-    const decoded: any = jwtDecode(token);
-    const expiresAt = decoded.exp * 1000; // convert seconds → ms
-    const timeout = expiresAt - Date.now();
-
-    this.autoLogout(timeout);
+  saveTokens(accessToken: string, refreshToken: string) {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    clearTimeout(this.logoutTimer);
-    window.location.href = '/login';
-    // this.router.navigate(['/login']);
+  getAccessToken(): string | null {
+    return localStorage.getItem('accessToken');
   }
 
-  autoLogout(delay: number) {
-    this.logoutTimer = setTimeout(() => {
-      alert('Session expired. Please log in again.');
-      this.logout();
-    }, delay);
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
   }
 
+  clearTokens() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  }
 
-  checkLogin(): Observable<boolean> {
-    const token = this.getToken();
-    if (!token) {
+  checkTokens(): Observable<boolean> {
+    const accessToken = this.getAccessToken();
+    const refreshToken = this.getRefreshToken();
+    if (!accessToken || !refreshToken) {
       this.logout();
       return of(false);
     }
 
-    return this.http.get<{ loggedIn: boolean }>("https://make-notes-backend.onrender.com/isLoggedIn", {
-      headers: { Authorization: `Bearer ${token}` }
+    return this.http.post<{ validTokens: boolean }>(`${this.API_URL}/isTokensValid`, {
+      accessToken: accessToken,
+      refreshToken: refreshToken
     }).pipe(
       map(res => {
-        if (!res.loggedIn) this.logout();
-        return res.loggedIn;
+        if (!res.validTokens) this.logout();
+        return res.validTokens;
       }),
       catchError(() => {
         this.logout();
@@ -59,8 +49,21 @@ export class AuthService {
     );
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('token');
+  refreshAccessToken(refreshToken: string | null): Observable<string> {
+    return this.http.post<{ accessToken: string }>(`${this.API_URL}/refresh-access-token`, { refreshToken })
+      .pipe(
+        tap((res) => {
+          localStorage.setItem('accessToken', res.accessToken);
+        }),
+        map(res => res.accessToken)
+      );
+  }
+
+  logout() {
+    this.clearTokens();
+    window.location.href = '/login';
+    return this.http.post(`${this.API_URL}/logout`, {
+      refreshToken: this.getRefreshToken()
+    });
   }
 }
-

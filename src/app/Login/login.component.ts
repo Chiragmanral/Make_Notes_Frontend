@@ -21,13 +21,15 @@ export class LoginComponent {
 
   login() {
     if (!this.email || !this.password) return;
-    this.http.post<{ success: boolean, token?: string }>('https://make-notes-backend.onrender.com/login', {
+    this.http.post<{
+      success: boolean, accessToken?: string, refreshToken?: string
+    }>('http://localhost:5000/login', {
       email: this.email,
       password: this.password
     }).subscribe({
       next: (res) => {
-        if (res.success && res.token) {
-          this.auth.login(res.token);
+        if (res.success && res.accessToken && res.refreshToken) {
+          this.auth.saveTokens(res.accessToken, res.refreshToken);
           this.router.navigate(['/notes']);
         } else {
           this.isInvalidCredentials = true;
