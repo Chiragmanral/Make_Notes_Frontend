@@ -23,7 +23,7 @@ export class LoginComponent {
     if (!this.email || !this.password) return;
     this.http.post<{
       success: boolean, accessToken?: string, refreshToken?: string
-    }>('http://localhost:5000/login', {
+    }>('https://make-notes-backend.onrender.com/login', {
       email: this.email,
       password: this.password
     }).subscribe({

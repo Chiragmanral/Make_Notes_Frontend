@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
   generateLink() {
     if (!this.enteredText) return;
 
-    this.http.post<{ generatedLink: string }>("http://localhost:5000/generateLink", {
+    this.http.post<{ generatedLink: string }>("https://make-notes-backend.onrender.com/generateLink", {
       noteText: this.enteredText,
       notePassword: this.enteredPassword,
       noteDuration: this.enteredDuration
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
   getNote() {
     if (!this.noteLinkCredential) return;
 
-    this.http.post<{ text: string, msg: string }>("http://localhost:5000/getNote", {
+    this.http.post<{ text: string, msg: string }>("https://make-notes-backend.onrender.com/getNote", {
       noteLinkCredential: this.noteLinkCredential,
       passwordCredential: this.passwordCredential
     })
@@ -109,7 +109,7 @@ export class HomeComponent implements OnInit {
     if (!accessToken) return;
 
     this.http.get<{ notes: any[] }>(
-      "http://localhost:5000/myNotes",
+      "https://make-notes-backend.onrender.com/myNotes",
     ).subscribe({
       next: (res) => this.userNotes = res.notes,
       error: () => console.error("failed to fetch user notes")

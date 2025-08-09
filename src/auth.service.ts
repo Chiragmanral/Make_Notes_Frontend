@@ -4,7 +4,7 @@ import { catchError, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private API_URL = 'http://localhost:5000';
+  private API_URL = 'https://make-notes-backend.onrender.com';
 
   constructor(private http: HttpClient) { }
 
