@@ -12,11 +12,33 @@
 <body>
   <header>
     <nav class="notes-choice">
-      <button type="button" class="choice" (click)="getGenerateNotes()">Generate Notes</button>
-      <button type="button" class="choice" (click)="getViewNotes()">View Notes</button>
-      <button type="button" class="choice" (click)="logout()">Logout</button>
+      <button type="button" class="choice" (click)="getGenerateNotes()"><i class="fas fa-plus"></i> Generate Notes</button>
+      <button type="button" class="choice" (click)="getViewNotes()"><i class="fas fa-eye"></i> View Notes</button>
+      <button type="button" class="choice" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </nav>
   </header>
+
+  <!-- View Note Modal -->
+  <div class="modal-backdrop" *ngIf="viewModalOpen" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3><i class="fas fa-sticky-note"></i> Note Content</h3>
+      <p>{{ selectedNoteText }}</p>
+      <p>{{ selectedNotePasswordStatus }}</p>
+      <button class="modal-btn" (click)="closeModal()"><i class="fas fa-times"></i> Close</button>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="deleteModalOpen" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3><i class="fas fa-exclamation-triangle"></i> Delete this note?</h3>
+      <p>This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="modal-btn danger" (click)="confirmDelete()"><i class="fas fa-trash"></i> Delete</button>
+        <button class="modal-btn" (click)="closeModal()"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <div *ngIf="generateNotes" class="form">
     <form (ngSubmit)="generateLink()">
@@ -29,7 +51,7 @@
       <br /><br />
 
       <div class="button-select-flex">
-        <button type="submit" class="form-button">Generate Link</button>
+        <button type="submit" class="form-button"><i class="fas fa-link"></i> Generate Link</button>
 
         <select name="validationDuration" id="validationDuration" [(ngModel)]="enteredDuration">
           <option value="once">Once</option>
@@ -42,8 +64,8 @@
       </div>
 
       <div *ngIf="noteLink">
-        <h4>Note Link: <a target="_blank">{{ noteLink }}</a></h4>
-        <button type="button" class="form-button" (click)="copyLink(noteLink)">Copy link</button>
+        <h4>Note Link: <a>{{ noteLink }}</a></h4>
+        <button type="button" class="form-button" (click)="copyLink(noteLink)"><i class="fas fa-copy"></i> Copy link</button>
       </div>
 
     </form>
@@ -53,8 +75,8 @@
       <ul>
         <li *ngFor="let note of userNotes" class="note-card">
           🔗 <a>{{ note.noteUrl }}</a>
-          <button type="button" class="form-button mynotes" (click)="copyLink(note.noteUrl)">Copy</button>
           <div class="note-actions">
+            <button type="button" class="form-button mynotes" (click)="copyLink(note.noteUrl)"><i class="fas fa-copy"></i> Copy</button>
             <button class="btn btn-view" (click)="viewNote(note.noteUrl)">
               <i class="fas fa-eye"></i> View
             </button>
@@ -80,7 +102,7 @@
       <input name="password" type="password" [(ngModel)]="passwordCredential" />
       <!-- <p class="password-msg">Enter password if the note is password protected, for public notes leave it.</p> -->
       <br /><br />
-      <button type="submit" class="form-button" (click)="getNote()">Submit</button>
+      <button type="submit" class="form-button" (click)="getNote()"><i class="fas fa-paper-plane"></i> Submit</button>
 
       <div *ngIf="noteText">
         <h4>Your note is :- {{ noteText }}</h4>

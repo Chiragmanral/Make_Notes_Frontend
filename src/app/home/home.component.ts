@@ -24,6 +24,11 @@ export class HomeComponent implements OnInit {
   noteText: string = "";
   noteMsg: string = "";
   userNotes: any[] = [];
+  viewModalOpen: boolean = false;
+  deleteModalOpen: boolean = false;
+  selectedNoteText: string = '';
+  selectedNotePasswordStatus: string = "";
+  noteToDelete: any = null;
 
   ngOnInit() {
     this.fetchUserNotes();
@@ -123,7 +128,9 @@ export class HomeComponent implements OnInit {
     ).subscribe({
       next: ({ text, isPassword }) => {
         if (text && isPassword) {
-          alert(`Your note is :- ${text} and the password status is :- ${isPassword}`);
+          this.selectedNoteText = text;
+          this.selectedNotePasswordStatus = isPassword;
+          this.viewModalOpen = true;
         }
       },
       error: (err: HttpErrorResponse) => {
@@ -137,23 +144,36 @@ export class HomeComponent implements OnInit {
   }
 
   deleteNote(noteUrl: string) {
-    if (!confirm("Are you sure you want to delete this note?")) return;
+    this.noteToDelete = noteUrl;
+    this.deleteModalOpen = true;
+  }
 
-    this.http.post<{ deleted: boolean }>(
-      "http://localhost:5000/deleteNote",
-      { noteUrl } // FIX: Send directly
-    ).subscribe({
-      next: (res) => {
-        if (res.deleted) {
-          alert("Deleted the note successfully!!");
-          this.fetchUserNotes(); // Refresh notes list
-        } else {
-          alert("Note is not deleted, there is some issue in deleting the note");
+  confirmDelete() {
+    if (this.noteToDelete) {
+      this.http.post<{ deleted: boolean }>(
+        "http://localhost:5000/deleteNote",
+        { noteUrl: this.noteToDelete } // FIX: Send directly
+      ).subscribe({
+        next: (res) => {
+          if (res.deleted) {
+            console.log("Deleted the note successfully!!");
+            this.fetchUserNotes(); // Refresh notes list
+          } else {
+            console.log("Note is not deleted, there is some issue in deleting the note");
+          }
+        },
+        error: () => {
+          console.log("Server error - check backend console");
         }
-      },
-      error: () => {
-        console.log("Server error - check backend console");
-      }
-    });
+      });
+    }
+    this.closeModal();
+  }
+
+  closeModal() {
+    this.viewModalOpen = false;
+    this.deleteModalOpen = false;
+    this.selectedNoteText = '';
+    this.noteToDelete = null;
   }
 }
