@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
   generateLink() {
     if (!this.enteredText) return;
 
-    this.http.post<{ generatedLink: string }>("https://make-notes-backend.onrender.com/generateLink", {
+    this.http.post<{ generatedLink: string }>("http://localhost:5000/generateLink", {
       noteText: this.enteredText,
       notePassword: this.enteredPassword,
       noteDuration: this.enteredDuration
@@ -56,8 +56,8 @@ export class HomeComponent implements OnInit {
           this.enteredPassword = "";
           this.enteredDuration = "once";
         },
-        error: (err : HttpErrorResponse) => {
-          if(err.status === 403) {
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 403) {
             alert("Your token or session is expired!! Login again")
           }
           else {
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
   getNote() {
     if (!this.noteLinkCredential) return;
 
-    this.http.post<{ text: string, msg: string }>("https://make-notes-backend.onrender.com/getNote", {
+    this.http.post<{ text: string, msg: string }>("http://localhost:5000/getNote", {
       noteLinkCredential: this.noteLinkCredential,
       passwordCredential: this.passwordCredential
     })
@@ -81,8 +81,8 @@ export class HomeComponent implements OnInit {
           this.noteLinkCredential = "";
           this.passwordCredential = "";
         },
-        error: (err : HttpErrorResponse) => {
-          if(err.status === 403) {
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 403) {
             alert("Your token or session is expired!! Login again")
           }
           else {
@@ -90,14 +90,6 @@ export class HomeComponent implements OnInit {
           }
         }
       });
-  }
-
-  copyLink(noteUrl: string) {
-    navigator.clipboard.writeText(noteUrl).then(() => {
-      console.log("Your link is copied to the clipboard!!");
-    }).catch(() => {
-      alert("Failed to copy link");
-    });
   }
 
   logout() {
@@ -109,10 +101,59 @@ export class HomeComponent implements OnInit {
     if (!accessToken) return;
 
     this.http.get<{ notes: any[] }>(
-      "https://make-notes-backend.onrender.com/myNotes",
+      "http://localhost:5000/myNotes",
     ).subscribe({
       next: (res) => this.userNotes = res.notes,
       error: () => console.error("failed to fetch user notes")
+    });
+  }
+
+  copyLink(noteUrl: string) {
+    navigator.clipboard.writeText(noteUrl).then(() => {
+      console.log("Your link is copied to the clipboard!!");
+    }).catch(() => {
+      alert("Failed to copy link");
+    });
+  }
+
+  viewNote(noteUrl: string) {
+    this.http.post<{ text?: string; isPassword?: string }>(
+      "http://localhost:5000/viewMyNote",
+      { noteUrl }
+    ).subscribe({
+      next: ({ text, isPassword }) => {
+        if (text && isPassword) {
+          alert(`Your note is :- ${text} and the password status is :- ${isPassword}`);
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 403) {
+          alert("Your token or session is expired!! Login again");
+        } else {
+          alert("Server error – check backend console.");
+        }
+      }
+    });
+  }
+
+  deleteNote(noteUrl: string) {
+    if (!confirm("Are you sure you want to delete this note?")) return;
+
+    this.http.post<{ deleted: boolean }>(
+      "http://localhost:5000/deleteNote",
+      { noteUrl } // FIX: Send directly
+    ).subscribe({
+      next: (res) => {
+        if (res.deleted) {
+          alert("Deleted the note successfully!!");
+          this.fetchUserNotes(); // Refresh notes list
+        } else {
+          alert("Note is not deleted, there is some issue in deleting the note");
+        }
+      },
+      error: () => {
+        console.log("Server error - check backend console");
+      }
     });
   }
 }

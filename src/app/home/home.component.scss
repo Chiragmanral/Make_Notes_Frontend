@@ -1,115 +1,210 @@
+// 🎨 Color Palette
+$primary: #1e88e5;
+$primary-dark: #1565c0;
+$primary-darker: #0d47a1;
+$accent: #4cafef;
+$danger: #f44336;
+$danger-dark: #d7382d;
+$light-bg: #f7f9fc;
+$white: #fff;
+$text-dark: #333;
+$text-muted: #666;
+$border-color: #d0d7de;
+
+// 🔤 Font & Spacing
+$radius: 12px;
+$padding: 0.75rem;
+$transition: 0.25s ease-in-out;
+
 * {
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    height : 100%;
-    background: #f0f2f5;
-    color: #333;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $light-bg, #eef3f8);
+  color: $text-dark;
 }
 
+// 🌟 Header
 header {
-    background: #1e88e5;
-    color: white;
-    padding: 1rem 2rem;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(90deg, $primary, $primary-dark);
+  color: $white;
+  padding: 1rem 2rem;
+  text-align: center;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  border-bottom-left-radius: $radius;
+  border-bottom-right-radius: $radius;
 }
 
 .notes-choice {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .choice {
-    background: white;
-    color: #1e88e5;
-    border: 2px solid #1e88e5;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+  background: $white;
+  color: $primary;
+  border: 2px solid $primary;
+  padding: 0.5rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition;
+  box-shadow: 0 2px 6px rgba($primary, 0.2);
+
+  &:hover {
+    background: $primary;
+    color: $white;
+    box-shadow: 0 4px 12px rgba($primary-dark, 0.3);
+    transform: translateY(-1px);
+  }
 }
 
-.choice:hover {
-    background: #1e88e5;
-    color: white;
-}
-
+// 📋 Form Container
 .form {
-    background: white;
-    max-width: 500px;
-    margin: 2rem auto;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.password-msg {
-    padding: 0;
-    margin: 0;
-    font-size: 14px;
-    // font-weight: 300;
+  background: $white;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 label {
-    font-weight: bold;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #444;
+  display: block;
 }
 
 input,
 select {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-}
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 
-.form-button {
-    background: #1e88e5;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    margin-right: 1rem;
-}
-
-.mynotes {
-    margin : 8px;
-}
-
-.form-button:hover {
-    background: #1565c0;
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 6px rgba($primary, 0.3);
+  }
 }
 
 .button-select-flex {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-h4 {
-    margin-top: 1rem;
+// ✨ Buttons
+.form-button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  transition: all $transition;
+  color: $white;
+
+  &.mynotes {
+    margin-left: 8px;
+  }
 }
 
-a {
-    color: #1e88e5;
-    text-decoration: underline;
-    word-break: break-all;
+.form-button {
+  background: linear-gradient(90deg, $primary, $primary-dark);
+
+  &:hover {
+    background: linear-gradient(90deg, $primary-dark, $primary-darker);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($primary-dark, 0.3);
+  }
+}
+
+// 🔹 Action Buttons
+.btn-view {
+  background-color: $accent;
+
+  &:hover {
+    background-color: darken($accent, 10%);
+  }
+}
+
+.btn-delete {
+  background-color: $danger;
+
+  &:hover {
+    background-color: $danger-dark;
+  }
+}
+
+// 📌 Notes List
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.note-card {
+  background: $light-bg;
+  padding: 1rem;
+  border-radius: $radius;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateX(2px);
+  }
+}
+
+.note-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .error {
-    color: red;
-    font-weight: bold;
-    margin-top: 1rem;
+  color: $danger;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  font-weight: 500;
+  word-break: break-all;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ✨ Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

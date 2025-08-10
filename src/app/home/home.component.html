@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <title>Make Notes</title>
 </head>
 
@@ -49,9 +51,18 @@
     <div *ngIf="userNotes.length > 0">
       <h3>Your Notes : </h3>
       <ul>
-        <li *ngFor="let note of userNotes">
-          🔗 <a [href]="note.noteUrl" target="_blank">{{ note.noteUrl }}</a>
-          <button type="button" class="form-button mynotes" (click)="copyLink(note.noteUrl)">Copy link</button>
+        <li *ngFor="let note of userNotes" class="note-card">
+          🔗 <a>{{ note.noteUrl }}</a>
+          <button type="button" class="form-button mynotes" (click)="copyLink(note.noteUrl)">Copy</button>
+          <div class="note-actions">
+            <button class="btn btn-view" (click)="viewNote(note.noteUrl)">
+              <i class="fas fa-eye"></i> View
+            </button>
+
+            <button class="btn btn-delete" (click)="deleteNote(note.noteUrl)">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
           <span *ngIf="note.noteViewOnce"> - View Once</span>
           <span *ngIf="note.noteViewAlways"> - Always Visible</span>
           <span *ngIf="note.noteValidationTime"> - Expires at: {{ note.noteValidationTime | date }}</span>
